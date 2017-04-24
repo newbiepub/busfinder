@@ -27,6 +27,16 @@ class Feedback extends React.Component {
     }
 
     imagePicker() {
+        var options = {
+            title: 'Select Picture',
+            customButtons: [
+                {name: 'Picture', title: 'Select An Image'},
+            ],
+            storageOptions: {
+                skipBackup: true,
+                path: 'images'
+            }
+        };
         ImagePicker.showImagePicker(options, (response) => {
             console.log('Response = ', response);
 
@@ -106,7 +116,7 @@ class Feedback extends React.Component {
                             right: 20,
                             top: 0,
                             bottom: 0
-                        }}>
+                        }} onPress={this.imagePicker.bind(this)}>
                             <Text>
                                 Upload Image
                             </Text>

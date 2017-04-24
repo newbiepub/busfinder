@@ -32,7 +32,9 @@ class AdminLogin extends React.Component {
                     </Body>
                 </Header>
                 <View style={{
-                    flex: 1
+                    flex: 0.1,
+                    justifyContent: "center",
+                    alignItems: "center"
                 }}>
                     <Item>
                         <InputGroup>

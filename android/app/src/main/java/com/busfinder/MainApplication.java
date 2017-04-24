@@ -10,6 +10,7 @@ import com.facebook.soloader.SoLoader;
 
 import com.airbnb.android.react.maps.MapsPackage;
 import com.imagepicker.ImagePickerPackage;
+import com.devfd.RNGeocoder.RNGeocoderPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +28,8 @@ public class MainApplication extends Application implements ReactApplication {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
                     new MapsPackage(),
-                    new ImagePickerPackage() // <-- add this line
+                    new ImagePickerPackage(),
+                    new RNGeocoderPackage()
             );
         }
     };

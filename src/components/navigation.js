@@ -3,6 +3,7 @@ import { Navigator, View, AsyncStorage } from 'react-native';
 import Home from "./home";
 import Feedback from "./Feedback";
 import AdminLogin from "./adminLogin";
+import {initDatabase} from "../util/initData";
 
 class Navigation extends Component {
     constructor(props) {
@@ -14,6 +15,7 @@ class Navigation extends Component {
     }
 
     componentWillMount() {
+        initDatabase();
     }
 
     renderScene(route, navigator) {
