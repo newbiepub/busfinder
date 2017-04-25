@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {View, PermissionsAndroid, TouchableNativeFeedback, AsyncStorage} from "react-native";
 import {Header, Left, Body, Right, Icon, Button, Title, Drawer, Fab, Text, List, Label} from "native-base";
+import _ from "lodash";
 import MapView from 'react-native-maps';
 import SideBar from "./sidebar";
 import * as Animate from "react-native-animatable";
@@ -15,6 +16,7 @@ export default class Home extends Component {
         this.currentPosition = null;
         this.region = null;
         this.routeData = null;
+        this.address = [];
         this.state={
             isUpdateLocation: false,
             currentPosition: null,
@@ -44,11 +46,32 @@ export default class Home extends Component {
             if(!err && route) {
                 let routes = JSON.parse(route);
                 this.routeData = JSON.parse(JSON.stringify(routes.splice(0, 10)));
-                setTimeout(() => {
-                    this.setState({isLoading: false})
-                }, 2000);
+                _.each(this.routeData, (routeItem, index) => {
+                    this.GetAddressData(routeItem.startPoint.latitude, routeItem.startPoint.longitude, routeItem.routeNumber, "startPoint");
+                    this.GetAddressData(routeItem.endPoint.latitude, routeItem.endPoint.longitude, routeItem.routeNumber, "endPoint");
+                    if(index === this.routeData.length - 1) {
+                        setTimeout(() => {
+                            this.setState({isLoading: false})
+                        }, 1000);
+                    }
+                });
             }
         })
+    }
+
+    GetAddressData(latitude, longitude, id, type) {
+        GeoCoder.geocodePosition({lat: parseFloat(latitude), lng: parseFloat(longitude)})
+            .then(res => {
+                this.address.push({dataId: id, address: res, type: type})
+            });
+    }
+
+    showFormatAddress(id, type) {
+        let getAddress = _.find(this.address, (item) => item.dataId === id && item.type === type);
+        if(getAddress && getAddress.address.length) {
+            return getAddress.address[0].formattedAddress;
+        }
+        return "Not Found";
     }
 
     getCurrentPosition () {
@@ -72,7 +95,15 @@ export default class Home extends Component {
 
     renderRow(item, keyId, rowId) {
         return (
-            <Animate.View animation="slideInUp" delay={rowId * 100}>
+        <TouchableNativeFeedback onPress={() => {}}>
+            <Animate.View animation="slideInUp" duration={500} delay={rowId * 100} style={{
+                marginBottom: 10,
+                paddingVertical: 15,
+                borderWidth: 1,
+                borderColor: "#cccccc",
+                backgroundColor: "#fff",
+                elevation: 5
+            }}>
                 <View style={{
                     flex: 1,
                     flexDirection: "row"
@@ -80,12 +111,15 @@ export default class Home extends Component {
                     <View style={{
                         flex: 0.15,
                         justifyContent: "center",
-                        alignItems: "center"
+                        alignItems: "center",
+                        borderRightWidth: 1,
+                        borderRightColor: "#cccccc"
                     }}>
                         <Icon name="md-bus"/>
                     </View>
                     <View style={{
-                        flex: 0.85
+                        flex: 0.85,
+                        paddingHorizontal: 20
                     }}>
                         <View style={{flex: 0.33 ,
                             flexDirection: "row"
@@ -93,27 +127,40 @@ export default class Home extends Component {
                             <Label>
                                 Route Number:
                             </Label>
-                            <Text>
+                            <Text style={{
+                                marginLeft: 10
+                            }}>
                                 {item.routeNumber}
                             </Text>
                         </View>
                         <View style={{flex: 0.33 ,
                             flexDirection: "row"
                         }}>
-                            <Text>
-                                {"asdasdasd"}
+                            <Label>
+                                From
+                            </Label>
+                            <Text style={{
+                                marginLeft: 10
+                            }}>
+                                {this.showFormatAddress(item.routeNumber, "startPoint")}
                             </Text>
                         </View>
                         <View style={{flex: 0.33 ,
                             flexDirection: "row"
                         }}>
-                            <Text>
-                                {"asdasdasd"}
+                            <Label>
+                                To
+                            </Label>
+                            <Text style={{
+                                marginLeft: 10
+                            }}>
+                                {this.showFormatAddress(item.routeNumber, "endPoint")}
                             </Text>
                         </View>
                     </View>
                 </View>
             </Animate.View>
+        </TouchableNativeFeedback>
         )
     }
 
