@@ -1,6 +1,8 @@
 import React from "react";
 import {View, Image} from "react-native";
 import {List, ListItem, Text, Container, Content} from "native-base";
+import { connect } from "react-redux";
+
 
 class SideBar extends React.Component {
     constructor(props) {
@@ -12,15 +14,21 @@ class SideBar extends React.Component {
     }
 
     onAdminLoginNavigator() {
-        this.props.navigator.push({
+        this.props.navigation.push({
             id: "adminlogin"
         })
     }
 
     onFeedbackNavigator() {
-        this.props.navigator.push({
+        this.props.navigation.push({
             id: "feedback"
         });
+    }
+
+    onAdminPageNavigator() {
+        this.props.navigation.push({
+            id: "adminpage"
+        })
     }
 
     render() {
@@ -41,11 +49,22 @@ class SideBar extends React.Component {
                     <Container>
                         <Content>
                             <List>
-                                <ListItem onPress={() => {this.onAdminLoginNavigator()}}>
-                                    <Text>
-                                        Admin Login
-                                    </Text>
-                                </ListItem>
+                                {
+                                    !this.props.account.loginState &&
+                                    <ListItem onPress={() => {this.onAdminLoginNavigator()}}>
+                                        <Text>
+                                            Admin Login
+                                        </Text>
+                                    </ListItem>
+                                }
+                                {
+                                    this.props.account.loginState &&
+                                    <ListItem onPress={() => {this.onAdminPageNavigator()}}>
+                                        <Text>
+                                            Admin Page
+                                        </Text>
+                                    </ListItem>
+                                }
                                 <ListItem onPress={() => {this.onFeedbackNavigator()}}>
                                     <Text>
                                         FeedBack
@@ -66,4 +85,10 @@ class SideBar extends React.Component {
     }
 }
 
-export default SideBar;
+const mapStateToProp = (state) => {
+    return {
+        account: state.account
+    }
+}
+
+export default connect(mapStateToProp, null) (SideBar);

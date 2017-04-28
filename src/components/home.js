@@ -25,6 +25,22 @@ export default class Home extends Component {
     }
 
     componentWillMount() {
+        AsyncStorage.getItem('route', (err, route) => {
+            if(!err && route) {
+                let routes = JSON.parse(route);
+                this.routeData = JSON.parse(JSON.stringify(routes.splice(0, 10)));
+                _.each(this.routeData, (routeItem, index) => {
+                    this.GetAddressData(routeItem.startPoint.latitude, routeItem.startPoint.longitude, routeItem.routeNumber, "startPoint");
+                    this.GetAddressData(routeItem.endPoint.latitude, routeItem.endPoint.longitude, routeItem.routeNumber, "endPoint");
+                    if(index === this.routeData.length - 1) {
+                        setTimeout(() => {
+                            this.setState({isLoading: false})
+                        }, 1000);
+                    }
+                });
+            }
+        });
+
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 this.currentPosition = position;
@@ -41,22 +57,6 @@ export default class Home extends Component {
             },
             {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
         );
-
-        AsyncStorage.getItem('route', (err, route) => {
-            if(!err && route) {
-                let routes = JSON.parse(route);
-                this.routeData = JSON.parse(JSON.stringify(routes.splice(0, 10)));
-                _.each(this.routeData, (routeItem, index) => {
-                    this.GetAddressData(routeItem.startPoint.latitude, routeItem.startPoint.longitude, routeItem.routeNumber, "startPoint");
-                    this.GetAddressData(routeItem.endPoint.latitude, routeItem.endPoint.longitude, routeItem.routeNumber, "endPoint");
-                    if(index === this.routeData.length - 1) {
-                        setTimeout(() => {
-                            this.setState({isLoading: false})
-                        }, 1000);
-                    }
-                });
-            }
-        })
     }
 
     GetAddressData(latitude, longitude, id, type) {
@@ -68,7 +68,7 @@ export default class Home extends Component {
 
     showFormatAddress(id, type) {
         let getAddress = _.find(this.address, (item) => item.dataId === id && item.type === type);
-        if(getAddress && getAddress.address.length) {
+        if(getAddress != undefined && getAddress.address.length) {
             return getAddress.address[0].formattedAddress;
         }
         return "Not Found";
@@ -95,7 +95,7 @@ export default class Home extends Component {
 
     renderRow(item, keyId, rowId) {
         return (
-        <TouchableNativeFeedback onPress={() => {}}>
+        <TouchableNativeFeedback>
             <Animate.View animation="slideInUp" duration={500} delay={rowId * 100} style={{
                 marginBottom: 10,
                 paddingVertical: 15,
@@ -172,7 +172,7 @@ export default class Home extends Component {
                 <Drawer
                     ref={(ref) => { this._drawer = ref; }}
                     content={
-                        <SideBar navigator={this.props.navigator}/>
+                        <SideBar navigation={this.props.navigation}/>
                     }
                     onClose={() => this._drawer._root.close()}
                 >
@@ -188,7 +188,7 @@ export default class Home extends Component {
                         <Title> Home </Title>
                         </Body>
                         <Right>
-                            <TouchableNativeFeedback onPress={() => {console.warn("Pressed")}}>
+                            <TouchableNativeFeedback>
                                 <Icon name="md-bus" style={{
                             color: "#fff"
                         }}/>

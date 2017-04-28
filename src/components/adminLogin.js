@@ -1,14 +1,20 @@
 import React from "react";
 import {View} from "react-native";
 import {Container, Content, Button, Header, Icon, Left, Body, Text, InputGroup, Input, Item} from "native-base";
+import {connect} from "react-redux";
+import {login} from "../action/account";
 
 class AdminLogin extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
+        this.state = {
+            username: "",
+            password: ""
+        }
     }
 
     onBackNavigator() {
-        this.props.navigator.pop();
+        this.props.navigation.pop();
     }
 
     render() {
@@ -38,15 +44,21 @@ class AdminLogin extends React.Component {
                 }}>
                     <Item>
                         <InputGroup>
-                            <Input placeholder="Username or Email"/>
+                            <Input
+                                onChangeText={(username) => this.setState({username})}
+                                value={this.state.username}
+                                placeholder="Username or Email"/>
                         </InputGroup>
                     </Item>
                     <Item>
                         <InputGroup>
-                            <Input placeholder="Password" secureTextEntry={true}/>
+                            <Input
+                                onChangeText={(password) => this.setState({password})}
+                                value={this.state.password}
+                                placeholder="Password" secureTextEntry={true}/>
                         </InputGroup>
                     </Item>
-                    <Button block>
+                    <Button block onPress={() => {this.props.login(this.state.username, this.state.password, this)}}>
                         <Text style={{
                            color: "#fff"
                        }}>
@@ -59,4 +71,14 @@ class AdminLogin extends React.Component {
     }
 }
 
-export default AdminLogin;
+const mapStateToProps = (state) => {
+    return {
+        account: state.account
+    }
+};
+
+const mapDispatchToProps = {
+    login
+};
+
+export default connect(mapStateToProps, mapDispatchToProps) (AdminLogin);

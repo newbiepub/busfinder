@@ -20,7 +20,7 @@ export function initDatabase() {
     AsyncStorage.getItem('route', (err, route) => {
         if(route == undefined) {
             let routeData = [];
-            for(let i = 0; i < 49 ; i++) {
+            for(let i = 0; i < 50 ; i++) {
                 let routeItem = {
                     routeNumber: faker.random.number(),
                     startPoint: {
@@ -43,7 +43,7 @@ export function initDatabase() {
             AsyncStorage.getItem("bus", (err, bus) => {
                 if (bus == undefined) {
                     let busData = [];
-                    for(let i = 0; i < 99 ; i++) {
+                    for(let i = 0; i < 50 ; i++) {
                         let busItem = {
                             routeNumber: routes[Math.floor(Math.random() * routes.length)].routeNumber,
                             timeToNextStation: faker.date.recent(),

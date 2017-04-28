@@ -23,7 +23,7 @@ class Feedback extends React.Component {
     }
 
     onBackNavigator() {
-        this.props.navigator.pop();
+        this.props.navigation.pop();
     }
 
     imagePicker() {
