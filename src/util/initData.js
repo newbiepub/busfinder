@@ -46,7 +46,7 @@ export function initDatabase() {
                     for(let i = 0; i < 50 ; i++) {
                         let busItem = {
                             routeNumber: routes[Math.floor(Math.random() * routes.length)].routeNumber,
-                            timeToNextStation: faker.date.recent(),
+                            timeToNextStation: faker.random.number(),
                             distanceToNextStation: faker.random.number(),
                             licensePlate: faker.lorem.word()
                         };

@@ -101,7 +101,11 @@ class AdminPage extends React.Component {
                             </View>
                         </TouchableNativeFeedback>
 
-                        <TouchableNativeFeedback>
+                        <TouchableNativeFeedback onPress={() => {
+                            this.props.navigation.push({
+                                id: "adminroute"
+                            })
+                        }}>
                             <View style={{
                             flexDirection: "row",
                              backgroundColor: "#ecf0f5",
@@ -141,7 +145,11 @@ class AdminPage extends React.Component {
                             </View>
                         </TouchableNativeFeedback>
 
-                        <TouchableNativeFeedback>
+                        <TouchableNativeFeedback onPress={() => {
+                            this.props.navigation.push({
+                                id: "adminfeedback"
+                            })
+                        }}>
                             <View style={{
                             flexDirection: "row",
                              backgroundColor: "#ecf0f5",

@@ -1,6 +1,6 @@
 import React from "react";
-import {View, Image} from "react-native";
-import ImagePicker from "react-native-image-picker";
+import {View, Image, AsyncStorage} from "react-native";
+import faker from "faker";
 import {
     Container,
     Content,
@@ -20,6 +20,15 @@ import {
 class Feedback extends React.Component {
     constructor(props) {
         super(props);
+        let data = this.props.data;
+        let routeData = this.props.routeData;
+        this.state = {
+            id: faker.random.uuid(),
+            routeNumber: routeData != undefined ? routeData.routeNumber : 0,
+            busLicense: data != undefined ? data.licensePlate : "",
+            email: "",
+            comment: ""
+        }
     }
 
     onBackNavigator() {
@@ -57,6 +66,24 @@ class Feedback extends React.Component {
         });
     }
 
+    omSubmitFeeback() {
+        let feedbackItem = this.state;
+        AsyncStorage.getItem("feedback", (err, feedbackData) => {
+            if(!err && feedbackData) {
+                let feedback = JSON.parse(feedbackData);
+                if(feedback.length) {
+                    feedback.push(feedbackItem);
+                    AsyncStorage.setItem('feedback', JSON.stringify(feedback));
+                } else {
+                    AsyncStorage.setItem('feedback', JSON.stringify([feedbackItem]));
+                }
+            } else {
+                AsyncStorage.setItem('feedback', JSON.stringify([feedbackItem]));
+            }
+            this.props.navigation.pop();
+        })
+    }
+
     render() {
         return (
             <View style={{
@@ -81,49 +108,36 @@ class Feedback extends React.Component {
                 <Content>
                     <Item>
                         <InputGroup>
-                            <Input placeholder="Bus Number"/>
+                            <Input
+                                editable={false}
+                                value={this.state.busLicense}
+                                placeholder="Bus License"/>
                         </InputGroup>
                     </Item>
                     <Item>
                         <InputGroup>
-                            <Input placeholder="Bus Route"/>
+                            <Input
+                                editable={false}
+                                value={this.state.routeNumber.toString()}
+                                placeholder="Bus Route"
+                            />
                         </InputGroup>
                     </Item>
                     <Item regular>
                         <InputGroup>
-                            <Input placeholder="Feedback"/>
+                            <Input
+                                onChangeText={(email) => this.setState({email})}
+                                placeholder="Email"/>
                         </InputGroup>
                     </Item>
-                    <Item style={{
-                        marginBottom: 20,
-                        marginTop: 20,
-                        alignItems: "flex-end",
-                        borderWidth: 0,
-                        height: 56
-                    }}>
-                        <Image source={{uri: "http://corp-content.tatamotors.com.s3-ap-southeast-1.amazonaws.com/wp-content/uploads/2015/09/buses-gallery04.jpg"}} style={{
-                            position: "absolute",
-                            left: 20,
-                            top: 0,
-                            bottom: 0,
-                            height: 56,
-                            width: 56,
-                            borderWidth: 1,
-                            borderColor: "#eee"
-                        }}/>
-                        <Button style={{
-                            position: "absolute",
-                            right: 20,
-                            top: 0,
-                            bottom: 0
-                        }} onPress={this.imagePicker.bind(this)}>
-                            <Text>
-                                Upload Image
-                            </Text>
-                        </Button>
-
+                    <Item regular>
+                        <InputGroup>
+                            <Input
+                                onChangeText={(comment) => this.setState({comment})}
+                                placeholder="Comment"/>
+                        </InputGroup>
                     </Item>
-                    <Button block>
+                    <Button block onPress={() => this.omSubmitFeeback()}>
                         <Text style={{
                            color: "#fff"
                        }}>

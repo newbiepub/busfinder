@@ -93,9 +93,17 @@ export default class Home extends Component {
         );
     }
 
+    onPressItem(item) {
+        this.props.navigation.push({
+            id:'routeinfo',
+            data: item,
+            instance: this
+        })
+    }
+
     renderRow(item, keyId, rowId) {
         return (
-        <TouchableNativeFeedback>
+        <TouchableNativeFeedback onPress={() => {this.onPressItem(item)}}>
             <Animate.View animation="slideInUp" duration={500} delay={rowId * 100} style={{
                 marginBottom: 10,
                 paddingVertical: 15,

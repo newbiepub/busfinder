@@ -1,11 +1,15 @@
 import React,{Component} from 'react';
-import { Navigator, View, AsyncStorage } from 'react-native';
+import { Navigator, View, AsyncStorage, TouchableNativeFeedback } from 'react-native';
 import Home from "./home";
 import Feedback from "./Feedback";
 import AdminLogin from "./adminLogin";
 import AdminPage from "./adminPage";
 import AdminBus from "./adminBus";
 import BusForm from "./adminBusForm";
+import AdminRoute from './adminRoute';
+import RouteForm from "./routeForm";
+import RouteInfo from "./routeInfo";
+import AdminFeedback from "./adminFeedback";
 import {initDatabase} from "../util/initData";
 
 class Navigation extends Component {
@@ -28,7 +32,7 @@ class Navigation extends Component {
             <Home navigation={navigation}/>
           );
           case "feedback":
-              return <Feedback navigation={navigation}/>;
+              return <Feedback navigation={navigation} data={route.data} instance={route.instance} routeData={route.routeData}/>;
           case "adminlogin":
               return <AdminLogin navigation={navigation}/>;
           case 'adminpage':
@@ -36,7 +40,15 @@ class Navigation extends Component {
           case 'adminbus':
               return <AdminBus navigation={navigation}/>;
           case 'busform':
-              return <BusForm navigation={navigation} data={route.data}/>;
+              return <BusForm navigation={navigation} data={route.data} instance={route.instance} formType={route.formType}/>;
+          case 'adminroute':
+              return <AdminRoute navigation={navigation}/>;
+          case 'routeform':
+              return <RouteForm navigation={navigation} data={route.data} instance={route.instance} formType={route.formType}/>;
+          case 'routeinfo':
+              return <RouteInfo navigation={navigation} data={route.data} instance={route.data}/>;
+          case 'adminfeedback':
+              return <AdminFeedback navigation={navigation}/>;
           break;
       }
     }

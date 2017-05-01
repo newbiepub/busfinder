@@ -19,12 +19,6 @@ class SideBar extends React.Component {
         })
     }
 
-    onFeedbackNavigator() {
-        this.props.navigation.push({
-            id: "feedback"
-        });
-    }
-
     onAdminPageNavigator() {
         this.props.navigation.push({
             id: "adminpage"
@@ -65,11 +59,6 @@ class SideBar extends React.Component {
                                         </Text>
                                     </ListItem>
                                 }
-                                <ListItem onPress={() => {this.onFeedbackNavigator()}}>
-                                    <Text>
-                                        FeedBack
-                                    </Text>
-                                </ListItem>
                                 <ListItem onPress={() => {}}>
                                     <Text>
                                         About Us
